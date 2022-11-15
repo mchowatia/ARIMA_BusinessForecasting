@@ -1,0 +1,46 @@
+---
+title: "ARIMA Business Forecasting Homework"
+author: "mc2611@rutgers.edu"
+date: "2022-11-11"
+output: html_document
+---
+
+```{r}
+library(fpp)
+library(fpp2)
+library(forecast)
+austrestimeseries <- ts(austres)
+plot(austrestimeseries)
+ndiffs(austrestimeseries)
+tsdisplay(austrestimeseries)
+austrestimeseriesdiff1 <- diff(austrestimeseries, differences=1)
+plot(austrestimeseriesdiff1)
+tsdisplay(austrestimeseriesdiff1)
+auto_fit <- auto.arima(austrestimeseries, trace=TRUE, stepwise = FALSE)
+auto_fit
+attributes(auto_fit)
+plot(forecast(auto_fit,h=8,level=c(99.5)))
+
+#Residual Analysis
+Acf(auto_fit$residuals)
+Box.test(residuals(auto_fit), lag=30, type="Ljung")
+plot.ts(residuals(auto_fit))
+hist(auto_fit$residuals)
+tsdiag(auto_fit)
+
+# Seasonal Data
+plot(austres)
+nsdiffs(austres)
+ndiffs(austres)
+ndiffs((diff(austres,5)))
+tsdisplay(diff(diff(austres,5)))
+fit3 <- auto.arima(austres,trace=TRUE, stepwise = FALSE )
+fit3
+
+#Residual Analysis
+Acf(fit3$residuals)
+Box.test(residuals(fit3), lag=30, type="Ljung")
+plot.ts(residuals(fit3))
+hist(fit3$residuals)
+tsdiag(fit3)
+```
